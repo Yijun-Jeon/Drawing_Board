@@ -6,16 +6,16 @@ import java.util.Stack;
 
 public class DrawingPanel extends JPanel {
 
-	ArrayList<DataModel> dataList;
-	ArrayList<PenModel> penList;
-	DataModel data;
-	PenModel penData;
+	ArrayList<PenModel> dataList;
+	//ArrayList<PenModel> penList;
+	PenModel data;
+	//PenModel penData;
 	//DrawListener drawL; // DrawingController로 구현
 	boolean bDrag;
 	SimplePainterView view;
-	Stack<DataModel> undoList;
-	Stack<PenModel> undoPenList;
-	boolean bPen;
+	Stack<PenModel> undoList;
+	//Stack<PenModel> undoPenList;
+	//boolean bPen;
 	
 	public DrawingPanel(SimplePainterView v) {
 		setBackground(Color.white);
@@ -27,16 +27,16 @@ public class DrawingPanel extends JPanel {
 		//addMouseListener(drawL); // DrawingController로 구현
 		//addMouseMotionListener(drawL); // DrawingController로 구현
 		
-		dataList = new ArrayList<DataModel>();
-		penList = new ArrayList<PenModel>();
-		data = new DataModel();
-		penData = new PenModel();
+		dataList = new ArrayList<PenModel>();
+		//penList = new ArrayList<PenModel>();
+		data = new PenModel();
+		//penData = new PenModel();
 		
-		undoList = new Stack<DataModel>();
-		undoPenList = new Stack<PenModel>();
+		undoList = new Stack<PenModel>();
+		//undoPenList = new Stack<PenModel>();
 	
 		bDrag = false;
-		bPen = false;
+		//bPen = false;
 	}
 	
 	@Override
@@ -56,11 +56,11 @@ public class DrawingPanel extends JPanel {
 			} else if (data.nDrawMode == SimplePainterConstants.OVAL) {
 				draw4Oval(page,data.ptOne,data.ptTwo,data.bFill);
 			} else if (data.nDrawMode == SimplePainterConstants.FREE) {
-				drawPen(page,penData);
+				drawPen(page,data);
 			}
 		} 
 		
-		for(DataModel savedData:dataList) {
+		for(PenModel savedData:dataList) {
 			page.setColor(savedData.color);
 			page2.setStroke(new BasicStroke(savedData.nSize));
 			if (savedData.nDrawMode == SimplePainterConstants.DOT) {
@@ -75,19 +75,21 @@ public class DrawingPanel extends JPanel {
 				draw4Rect(page, savedData.ptOne, savedData.ptTwo, savedData.bFill);
 			} else if (savedData.nDrawMode == SimplePainterConstants.OVAL) {
 				draw4Oval(page,savedData.ptOne,savedData.ptTwo,savedData.bFill);
+			} else if (savedData.nDrawMode == SimplePainterConstants.FREE) {
+				drawPen(page,savedData);
 			}
 		} 
 		
-		for(PenModel savedData:penList) {
-			page.setColor(savedData.color);
-			page2.setStroke(new BasicStroke(savedData.nSize));
-			drawPen(page,savedData);
-		}
+//		for(PenModel savedData:penList) {
+//			page.setColor(savedData.color);
+//			page2.setStroke(new BasicStroke(savedData.nSize));
+//			drawPen(page,savedData);
+//		}
 	}
 	
-	private void drawPen(Graphics page,PenModel data) {
-		for(DataModel savedData: data.pens)
-			page.fillOval(savedData.ptOne.x - savedData.nSize/2, savedData.ptOne.y - savedData.nSize/2, savedData.nSize, savedData.nSize);
+	private void drawPen(Graphics page,PenModel savedData) {
+		for(Point pt: savedData.pens)
+			page.fillOval(pt.x - savedData.nSize/2, pt.y - savedData.nSize/2, savedData.nSize, savedData.nSize);
 	}
 	
 	private void draw4Rect(Graphics page, Point pt1, Point pt2, boolean fill) {
@@ -153,33 +155,29 @@ public class DrawingPanel extends JPanel {
 	
 	public void clearData() {
 		dataList.clear();
-		penList.clear();
+		//penList.clear();
 		undoList.clear();
-		undoPenList.clear();
+		//undoPenList.clear();
 		repaint();
 	}
 	
 	public void undoData() {
-		if(!bPen) {
-			if(!dataList.isEmpty())
-				undoList.push(dataList.remove(dataList.size()-1));
-		}
-		else {
-			if(!penList.isEmpty())
-				undoPenList.push(penList.remove(penList.size()-1));
-		}
+		if(!dataList.isEmpty())
+			undoList.push(dataList.remove(dataList.size()-1));
+//		else {
+//			if(!penList.isEmpty())
+//				undoPenList.push(penList.remove(penList.size()-1));
+//		}
 		repaint();
 	}
 	
 	public void redoData() {
-		if(!bPen) {
-			if(!undoList.isEmpty())
-				dataList.add(undoList.pop());
-		}
-		else { 
-			if(!undoPenList.isEmpty())
-				penList.add(undoPenList.pop());
-		}
+		if(!undoList.isEmpty())
+			dataList.add(undoList.pop());
+//		else { 
+//			if(!undoPenList.isEmpty())
+//				penList.add(undoPenList.pop());
+//		}
 		repaint();
 	}
 	

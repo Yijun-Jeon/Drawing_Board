@@ -1,30 +1,24 @@
-import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 
-public class PenModel {
-	ArrayList<DataModel> pens;
-	public int nSize;
-	public Color color;
+public class PenModel extends DataModel{
+	ArrayList<Point> pens;
 	
 	public PenModel() {
-		pens = new ArrayList<DataModel>();
-		nSize = 5;
-		color = Color.black;
+		super();
+		pens = new ArrayList<Point>();
 	}
 	
 	public PenModel(PenModel data) {
-		pens = new ArrayList<DataModel>();
-		for(DataModel d: data.pens)
-			pens.add(new DataModel(d));
-		nSize = data.nSize;
-		color = data.color;
+		super(data);
+		pens = new ArrayList<Point>();
+		for(Point pt: data.pens)
+			pens.add(new Point(pt));
 	}
 	
-	public void setSize(int size) {nSize = size;}
-	public void setColor(Color c) {color = c;}
 	
-	public void addPenData(DataModel data) {
-		pens.add(new DataModel(data));
+	public void addPenData(Point data) {
+		pens.add(new Point(data));
 	}
 	
 	public void clear() {
