@@ -68,8 +68,12 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	private void drawPen(Graphics page,PenModel savedData) {
-		for(Point pt: savedData.pens)
-			page.fillOval(pt.x - savedData.nSize/2, pt.y - savedData.nSize/2, savedData.nSize, savedData.nSize);
+		Point temp = new Point(savedData.pens.get(0));
+		for(Point pt: savedData.pens) {
+			page.drawLine(temp.x, temp.y, pt.x, pt.y);
+			temp = pt;
+		}
+		//page.fillOval(pt.x - savedData.nSize/2, pt.y - savedData.nSize/2, savedData.nSize, savedData.nSize);
 	}
 	
 	private void draw4Rect(Graphics page, Point pt1, Point pt2, boolean fill) {

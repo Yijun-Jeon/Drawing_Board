@@ -23,7 +23,8 @@ public class DrawingController implements MouseListener, MouseMotionListener {
 			drawPanel.data.ptTwo = event.getPoint();
 			drawPanel.repaint();
 		} else if (drawPanel.data.nDrawMode == SimplePainterConstants.FREE) {
-			drawPanel.data.ptOne = event.getPoint();
+			drawPanel.data.ptOne.setLocation(drawPanel.data.ptTwo);
+			drawPanel.data.ptTwo = event.getPoint();
 			drawPanel.data.addPenData(new Point(drawPanel.data.ptOne));
 			drawPanel.repaint();
 		}
@@ -49,6 +50,7 @@ public class DrawingController implements MouseListener, MouseMotionListener {
 		else if(drawPanel.data.nDrawMode == SimplePainterConstants.FREE) {
 			drawPanel.bDrag = true;
 			drawPanel.data.ptOne = event.getPoint();
+			drawPanel.data.ptTwo = event.getPoint();
 			drawPanel.data.nSize = Integer.parseInt(view.txtSize.getText());
 			drawPanel.data.nSize = Integer.parseInt(view.txtSize.getText());
 			drawPanel.data.addPenData(new Point(drawPanel.data.ptOne));
@@ -66,6 +68,7 @@ public class DrawingController implements MouseListener, MouseMotionListener {
 			drawPanel.repaint();
 		}else if(drawPanel.data.nDrawMode == SimplePainterConstants.FREE) {
 			drawPanel.dataList.add(new PenModel(drawPanel.data));
+			drawPanel.data.clear();
 			drawPanel.bDrag = false;
 		}
 	}
