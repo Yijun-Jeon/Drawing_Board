@@ -14,6 +14,7 @@ public class SimplePainterView extends JPanel {
 	JButton btnColor;
 	JTextArea txtArea;
 	String strMessage;
+	OptionButton btnLOption;
 
 	int nSize;
 	boolean bFill;
@@ -62,23 +63,27 @@ public class SimplePainterView extends JPanel {
 			btnMenuArray[i].addActionListener(new MenuClicked());
 			menuPanel.add(btnMenuArray[i]);
 		}
-
+		
+		btnLOption = new OptionButton();
+		
 		lblSize = new JLabel("DOT SIZE: ");
 		optionPanel.add(lblSize);
 
 		txtSize = new JTextField(8);
 		txtSize.setText(Integer.toString(nSize));
+		txtSize.addActionListener(btnLOption);
 		optionPanel.add(txtSize);
 
 		chkFill = new JCheckBox("FILL");
 		chkFill.setBackground(Color.white);
 		chkFill.setSelected(bFill);
+		chkFill.addActionListener(btnLOption);
 		optionPanel.add(chkFill);
 
 		btnColor = new JButton("COLOR");
 		btnColor.setBackground(SimplePainterConstants.MENU_COLOR[0]);
 		btnColor.setForeground(SimplePainterConstants.MENU_COLOR[1]);
-		btnColor.addActionListener(new ColorButton());
+		btnColor.addActionListener(btnLOption);
 		optionPanel.add(btnColor);
 
 		setOptionInvisible();
@@ -138,8 +143,7 @@ public class SimplePainterView extends JPanel {
 		}
 	}
 
-	private class MenuClicked implements ActionListener
-	{
+	private class MenuClicked implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object obj = e.getSource();
@@ -148,42 +152,62 @@ public class SimplePainterView extends JPanel {
 					setOptionInvisible();
 					lblSize.setVisible(true);
 					txtSize.setVisible(true);
-					if (i == SimplePainterConstants.DOT) {
-						 lblSize.setText("DOT SIZE : ");
-						 btnInfo = "Draw mode: " + SimplePainterConstants.MENU[i] + "\nSize: " + txtSize.getText() + "\nColor: " + chooserColor.getRGB() + "(RGB)";
-					} else if (i == SimplePainterConstants.LINE) {
-						lblSize.setText("LINE WIDTH : ");
-						btnInfo = "Draw mode: " + SimplePainterConstants.MENU[i] + "\nSize: " + txtSize.getText() + "\nColor: " + chooserColor.getRGB() + "(RGB)";
-					} else if (i == SimplePainterConstants.RECT || 
-							   i == SimplePainterConstants.OVAL) {
-						lblSize.setText("LINE WIDTH : ");
-						chkFill.setVisible(true);
-						btnInfo = "Draw mode: " + SimplePainterConstants.MENU[i] + "\nSize: " + txtSize.getText()+"\tFill: " + chkFill.isSelected() + "\nColor: " + chooserColor.getRGB() + "(RGB)";
-					} else if(i == SimplePainterConstants.CLEAR) {
-						setOptionInvisible();
-						drawPanel.clearData();
-						btnInfo = "Draw mode: " + SimplePainterConstants.MENU[i];
-					} else if(i == SimplePainterConstants.UNDO) {
-						setOptionInvisible();
-						drawPanel.undoData();
-						btnInfo = "Draw mode: " + SimplePainterConstants.MENU[i];
-					} else if(i == SimplePainterConstants.REDO) {
-						setOptionInvisible();
-						drawPanel.redoData();
-						btnInfo = "Draw mode: " + SimplePainterConstants.MENU[i];
-					} else if(i == SimplePainterConstants.FREE) {
-						lblSize.setText("PEN Size : ");
-						btnInfo = "Draw mode: " + SimplePainterConstants.MENU[i] + "\nSize: " + txtSize.getText();
-					}
-					btnColor.setVisible(true);
-					
-					txtArea.setText(btnInfo);
+					changeOption(i);
 				} 
 			} 
-		} 
-	} 
+		}
+	}
+	
+	private void changeOption(int mode) {
+		switch(mode){
+		case SimplePainterConstants.DOT:
+			lblSize.setText("DOT SIZE : ");
+			 btnInfo = "Draw mode: " + SimplePainterConstants.MENU[mode];
+			 btnInfo += "\nDot Size: " + txtSize.getText();
+			 btnInfo += "\nColor: " + chooserColor.toString() + " (RGB)";
+			break;
+		case SimplePainterConstants.LINE:
+			lblSize.setText("Line SIZE : ");
+			 btnInfo = "Draw mode: " + SimplePainterConstants.MENU[mode];
+			 btnInfo += "\nLine Size: " + txtSize.getText();
+			 btnInfo += "\nColor: " + chooserColor.toString() + " (RGB)";
+			break;
+		case SimplePainterConstants.RECT:
+		case SimplePainterConstants.OVAL:
+			lblSize.setText("Line SIZE : ");
+			 btnInfo = "Draw mode: " + SimplePainterConstants.MENU[mode];
+			 btnInfo += "\nLine Size: " + txtSize.getText();
+			 btnInfo += "\tFill: " + chkFill.isSelected();
+			 btnInfo += "\nColor: " + chooserColor.toString() + " (RGB)";
+			 chkFill.setVisible(true);
+			break;
+		case SimplePainterConstants.FREE:
+			lblSize.setText("Pen SIZE : ");
+			 btnInfo = "Draw mode: " + SimplePainterConstants.MENU[mode];
+			 btnInfo += "\nPen Size: " + txtSize.getText();
+			 btnInfo += "\nColor: " + chooserColor.toString() + " (RGB)";
+			break;
+		case SimplePainterConstants.UNDO:
+			setOptionInvisible();
+			drawPanel.undoData();
+			btnInfo = "Draw mode: " + SimplePainterConstants.MENU[mode];
+			break;
+		case SimplePainterConstants.REDO:
+			setOptionInvisible();
+			drawPanel.redoData();
+			btnInfo = "Draw mode: " + SimplePainterConstants.MENU[mode];
+			break;
+		case SimplePainterConstants.CLEAR:
+			setOptionInvisible();
+			drawPanel.clearData();
+			btnInfo = "Draw mode: " + SimplePainterConstants.MENU[mode];
+			break;
+		}
+		btnColor.setVisible(true);
+		txtArea.setText(btnInfo);
+	}
 
-	private class ColorButton implements ActionListener {
+	private class OptionButton implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -193,7 +217,13 @@ public class SimplePainterView extends JPanel {
 				btnColor.setBackground(chooserColor);
 				drawPanel.data.color = chooserColor;
 			}
+			else if (obj == txtSize) {
+				drawPanel.data.nSize = Integer.parseInt(txtSize.getText());
+			}
+			else if (obj == chkFill) {
+				drawPanel.data.bFill = chkFill.isSelected();
+			}
+			changeOption(drawPanel.data.nDrawMode);
 		}
-
 	}
 }
