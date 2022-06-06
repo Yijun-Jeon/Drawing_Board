@@ -177,12 +177,11 @@ public class SimplePainterView extends JPanel {
 					}
 					btnColor.setVisible(true);
 					
-					// 메시지 패널 대상 현재 버튼과 옵션 정보 출력
 					txtArea.setText(btnInfo);
 				} 
 			} 
-		} // actionPerformed()
-	} // MenuClicked class
+		} 
+	} 
 
 	private class ColorButton implements ActionListener {
 

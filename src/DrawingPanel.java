@@ -7,15 +7,10 @@ import java.util.Stack;
 public class DrawingPanel extends JPanel {
 
 	ArrayList<PenModel> dataList;
-	//ArrayList<PenModel> penList;
 	PenModel data;
-	//PenModel penData;
-	//DrawListener drawL; // DrawingController로 구현
 	boolean bDrag;
 	SimplePainterView view;
 	Stack<PenModel> undoList;
-	//Stack<PenModel> undoPenList;
-	//boolean bPen;
 	
 	public DrawingPanel(SimplePainterView v) {
 		setBackground(Color.white);
@@ -23,20 +18,11 @@ public class DrawingPanel extends JPanel {
 		
 		view = v;
 		
-		//drawL = new DrawListener(); // DrawingController로 구현
-		//addMouseListener(drawL); // DrawingController로 구현
-		//addMouseMotionListener(drawL); // DrawingController로 구현
-		
 		dataList = new ArrayList<PenModel>();
-		//penList = new ArrayList<PenModel>();
 		data = new PenModel();
-		//penData = new PenModel();
-		
 		undoList = new Stack<PenModel>();
-		//undoPenList = new Stack<PenModel>();
 	
 		bDrag = false;
-		//bPen = false;
 	}
 	
 	@Override
@@ -79,12 +65,6 @@ public class DrawingPanel extends JPanel {
 				drawPen(page,savedData);
 			}
 		} 
-		
-//		for(PenModel savedData:penList) {
-//			page.setColor(savedData.color);
-//			page2.setStroke(new BasicStroke(savedData.nSize));
-//			drawPen(page,savedData);
-//		}
 	}
 	
 	private void drawPen(Graphics page,PenModel savedData) {
@@ -155,29 +135,19 @@ public class DrawingPanel extends JPanel {
 	
 	public void clearData() {
 		dataList.clear();
-		//penList.clear();
 		undoList.clear();
-		//undoPenList.clear();
 		repaint();
 	}
 	
 	public void undoData() {
 		if(!dataList.isEmpty())
 			undoList.push(dataList.remove(dataList.size()-1));
-//		else {
-//			if(!penList.isEmpty())
-//				undoPenList.push(penList.remove(penList.size()-1));
-//		}
 		repaint();
 	}
 	
 	public void redoData() {
 		if(!undoList.isEmpty())
 			dataList.add(undoList.pop());
-//		else { 
-//			if(!undoPenList.isEmpty())
-//				penList.add(undoPenList.pop());
-//		}
 		repaint();
 	}
 	
@@ -185,66 +155,4 @@ public class DrawingPanel extends JPanel {
 		this.addMouseListener(listener);
 		this.addMouseMotionListener(listener);
 	}
-
-	// DrawingController로 구현
-	/*
-	private class DrawListener implements MouseListener, MouseMotionListener{
-
-		public void mouseClicked(MouseEvent event) {
-			if (data.nDrawMode == SimplePainterConstants.DOT) {
-				data.ptOne = event.getPoint();
-				data.nSize = Integer.parseInt(view.txtSize.getText());
-				dataList.add(new DataModel(data)); 
-				repaint();
-			} 
-		}	
-		
-		@Override
-		public void mousePressed(MouseEvent event) {
-			if(data.nDrawMode == SimplePainterConstants.LINE ||
-					data.nDrawMode == SimplePainterConstants.RECT ||
-					data.nDrawMode == SimplePainterConstants.OVAL ||
-					data.nDrawMode == SimplePainterConstants.FREE){
-				bDrag = true;
-				data.ptOne = event.getPoint();
-				data.nSize = Integer.parseInt(view.txtSize.getText());
-				data.bFill = view.chkFill.isSelected();
-			}
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent event) {
-			if(data.nDrawMode == SimplePainterConstants.LINE ||
-					data.nDrawMode == SimplePainterConstants.RECT ||
-					data.nDrawMode == SimplePainterConstants.OVAL ||
-					data.nDrawMode == SimplePainterConstants.FREE) {
-				data.ptTwo = event.getPoint();
-				dataList.add(new DataModel(data));
-				bDrag = false;
-				repaint();
-			}
-		}
-		
-		@Override
-		public void mouseDragged(MouseEvent event) {
-			if(data.nDrawMode == SimplePainterConstants.LINE ||
-					data.nDrawMode == SimplePainterConstants.RECT ||
-					data.nDrawMode == SimplePainterConstants.OVAL) {
-				data.ptTwo = event.getPoint();
-				repaint();
-			}
-			
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent event) {}
-		
-		@Override
-		public void mouseEntered(MouseEvent event) {}
-
-		@Override
-		public void mouseExited(MouseEvent event) {}
-		
-	}*/
-	
 }

@@ -18,5 +18,5 @@ public class SimplePainterController implements ActionListener {
 			if (SimplePainterConstants.MENU[i].equals(btnMenu.getText()))
 				drawPanel.data.nDrawMode = i;
 		}
-	} // actionPerformed()
+	} 
 }
